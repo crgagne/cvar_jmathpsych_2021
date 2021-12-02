@@ -50,6 +50,9 @@ def plot_1D_arrows(Pol,alpha_ind,maze,term_states_for_plotting,
                 # for 0.5 use 2 arrows
                 else:
 
+                    if jointbox:
+                        box=False
+
                     for marker,mult in zip(markers,mults):
                         yoffset=0
                         xoffset=0
@@ -224,20 +227,14 @@ def plot_1D_values_policy_distortions(Pol,
                            term_states_for_plotting,
                            box=False,box_ec=(0.9,0.9,0.9,1),jointbox=True,staybox=staybox)
         elif eval_or_opt=='opt':
-            if yi>0:
-                plot_1D_arrows(Pol[:,yi,:],
-                   yi,
-                   agent.maze,
-                   term_states_for_plotting,
-                   box=True,
-                   box_size_adjustement=False)
-            elif yi==0:
-                plot_1D_arrows(Pol[:,yi,:],
-                               yi,
-                               agent.maze,
-                               term_states_for_plotting,
-                               box=False,box_ec=(0.9,0.9,0.9,1),jointbox=True,staybox=staybox)
-
+            plot_1D_arrows(Pol[:,yi,:],
+               yi,
+               agent.maze,
+               term_states_for_plotting,
+               box=True,
+               box_size_adjustement=False,
+               jointbox=True,
+               staybox=staybox)
 
         # Plot y along the edge
         trans = ax.get_xaxis_transform() # x in data untis, y in axes fraction

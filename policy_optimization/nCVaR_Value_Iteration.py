@@ -169,6 +169,21 @@ def nCVaR_VI(V0,Ns,Ny,Na,P_full,gamma,y_set,r,
             V_old = V.copy()
             V_storage.append(V_old)
 
+    # recalculate optimal policy with convergence threshold to deal with ties.
+    for x in range(Ns):
+        for yi in range(Ny):
+            q_ests = Q[x,yi,:]
+            roundoff = int(np.abs(np.log10(converg_thresh))) # round based on convergence threhsold
+            q_ests = np.round(q_ests,roundoff)
+            v_est = np.min(q_ests)
+            best_actions = np.where(np.equal(q_ests,v_est))[0]
+            if len(best_actions)==1:
+                pi=np.zeros(Na)
+                pi[best_actions]=1;
+            else:
+                pi = np.exp(-10*q_ests) / np.sum(np.exp(-10*q_ests)); # choose policy using soft-max if we have ties
+            Pi[x,yi]=pi
+
     print("--- %s seconds ---" % (time.time() - start_time))
 
     return(V,Q,Xi,Pi,V_storage,Q_storage,Xi_storage,pointwise_error,V_converged,multi_starts)
